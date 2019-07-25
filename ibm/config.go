@@ -205,7 +205,7 @@ func (sess clientSession) BluemixAcccountv1API() (accountv1.AccountServiceAPI, e
 
 // BluemixSession to provide the Bluemix Session
 func (sess clientSession) BluemixSession() (*bxsession.Session, error) {
-	return sess.session.BluemixSession, sess.cfConfigErr
+	return sess.session.BluemixSession, nil
 }
 
 // BluemixUserDetails ...
@@ -488,6 +488,16 @@ func newSession(c *Config) (*Session, error) {
 			ResourceGroup:   c.ResourceGroup,
 			RetryDelay:      &c.RetryDelay,
 			MaxRetries:      &c.RetryCount,
+		}
+		clientID := os.Getenv("IC_CLIENT_ID")
+		if clientID != "" && clientID != "bx" {
+			bmxConfig.ClientID = clientID
+			bmxConfig.UAAClientID = clientID
+		}
+		clientSecret := os.Getenv("IC_CLIENT_SECRET")
+		if clientSecret != "" && clientSecret != "bx" {
+			bmxConfig.ClientSecret = clientSecret
+			bmxConfig.UAAClientSecret = clientSecret
 		}
 		sess, err := bxsession.New(bmxConfig)
 		if err != nil {

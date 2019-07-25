@@ -68,7 +68,7 @@ type AppRequest struct {
 	DockerImage              *string                 `json:"docker_image,omitempty"`
 	StagingFailedReason      *string                 `json:"staging_failed_reason,omitempty"`
 	StagingFailedDescription *string                 `json:"staging_failed_description,omitempty"`
-	Ports                    *[]int                  `json:"ports,omitempty"`
+	Ports                    []int                   `json:"ports,omitempty"`
 	DockerCredentialsJSON    *map[string]interface{} `json:"docker_credentials_json,omitempty"`
 	EnvironmentJSON          *map[string]interface{} `json:"environment_json,omitempty"`
 }
@@ -163,12 +163,12 @@ func (resource AppResource) ToFields() App {
 		HealthCheckType:         entity.HealthCheckType,
 		HealthCheckTimeout:      entity.HealthCheckTimeout,
 		HealthCheckHTTPEndpoint: entity.HealthCheckHTTPEndpoint,
-		Diego:       entity.Diego,
-		DockerImage: entity.DockerImage,
-		EnableSSH:   entity.EnableSSH,
-		Ports:       entity.Ports,
-		DockerCredentialsJSON: entity.DockerCredentialsJSON,
-		EnvironmentJSON:       entity.EnvironmentJSON,
+		Diego:                   entity.Diego,
+		DockerImage:             entity.DockerImage,
+		EnableSSH:               entity.EnableSSH,
+		Ports:                   entity.Ports,
+		DockerCredentialsJSON:   entity.DockerCredentialsJSON,
+		EnvironmentJSON:         entity.EnvironmentJSON,
 	}
 }
 
