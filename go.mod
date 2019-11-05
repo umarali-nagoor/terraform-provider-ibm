@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/Bowery/prompt v0.0.0-20190916142128-fa8279994f75 // indirect
-	github.com/IBM-Cloud/bluemix-go v0.0.0-20191030071818-1b504e84af9a
+	github.com/IBM-Cloud/bluemix-go v0.0.0-20191219070205-adffc398d07d
 	github.com/IBM-Cloud/power-go-client v0.0.0-00010101000000-000000000000
 	github.com/IBM/ibm-cos-sdk-go v1.2.0
 	github.com/apache/incubator-openwhisk-client-go v0.0.0-20171128215515-ad814bc98c32
@@ -14,10 +14,10 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-openapi/strfmt v0.19.4
 	github.com/go-test/deep v1.0.4 // indirect
-	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/google/shlex v0.0.0-20181106134648-c34317bd91bf // indirect
 	github.com/hashicorp/go-uuid v1.0.1
 	github.com/hashicorp/go-version v1.2.0
+	github.com/hashicorp/terraform v0.12.18
 	github.com/hashicorp/terraform-plugin-sdk v1.0.0
 	github.com/hokaccha/go-prettyjson v0.0.0-20170213120834-e6b9231a2b1c // indirect
 	github.com/kardianos/govendor v1.0.9 // indirect
