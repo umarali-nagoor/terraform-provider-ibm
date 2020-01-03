@@ -21,7 +21,6 @@ import (
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
-
 	//"github.com/IBM-Cloud/bluemix-go/crn"
 	"github.com/go-openapi/strfmt"
 )

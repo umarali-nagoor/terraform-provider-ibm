@@ -12,12 +12,16 @@ require (
 	github.com/cloudfoundry/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21 // indirect
 	github.com/dchest/safefile v0.0.0-20151022103144-855e8d98f185 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/ghodss/yaml v1.0.0 // indirect
+	github.com/go-openapi/runtime v0.19.9 // indirect
 	github.com/go-openapi/strfmt v0.19.4
+	github.com/go-openapi/swag v0.19.6 // indirect
+	github.com/go-openapi/validate v0.19.5 // indirect
 	github.com/go-test/deep v1.0.4 // indirect
+	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/google/shlex v0.0.0-20181106134648-c34317bd91bf // indirect
 	github.com/hashicorp/go-uuid v1.0.1
 	github.com/hashicorp/go-version v1.2.0
-	github.com/hashicorp/terraform v0.12.18
 	github.com/hashicorp/terraform-plugin-sdk v1.0.0
 	github.com/hashicorp/tf-sdk-migrator v1.0.0 // indirect
 	github.com/hokaccha/go-prettyjson v0.0.0-20170213120834-e6b9231a2b1c // indirect
