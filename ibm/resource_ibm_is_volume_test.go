@@ -127,7 +127,7 @@ func testAccCheckIBMISVolumeExists(n, volID string) resource.TestCheckFunc {
 func testAccCheckIBMISVolumeConfig(name string) string {
 	return fmt.Sprintf(`
 	resource "ibm_is_volume" "storage" {
-		count = 30
+		count = 1
     	name =  join("-", ["testcases", count.index])
     	profile = "10iops-tier"
 		zone = "us-south-3"
