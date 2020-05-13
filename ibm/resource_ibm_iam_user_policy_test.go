@@ -332,7 +332,7 @@ func testAccCheckIBMIAMUserPolicyResourceGroup() string {
 
 		  
 		data "ibm_resource_group" "group" {
-			name = "Default"
+			name = "default"
 	  	}
 	  
 	  	resource "ibm_iam_user_policy" "policy" {
@@ -354,7 +354,7 @@ func testAccCheckIBMIAMUserPolicyResourceType() string {
 
 		  
 		data "ibm_resource_group" "group" {
-			name = "Default"
+			name = "default"
 		  }
 		  
 		resource "ibm_iam_user_policy" "policy" {
@@ -386,7 +386,7 @@ func testAccCheckIBMIAMUserPolicyInvalidUser() string {
 
 		  
 		resource "ibm_iam_user_policy" "policy" {
-			ibm_id = "test@in.ibm.com"
+			ibm_id = "umarali.nagoor@in.ibm.com"
 			roles  = ["Viewer"]
 	  	}
 

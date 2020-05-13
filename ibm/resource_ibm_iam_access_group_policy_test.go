@@ -369,7 +369,7 @@ func testAccCheckIBMIAMAccessGroupPolicyResourceGroup(name string) string {
 	  	}
 	  
 	  	data "ibm_resource_group" "group" {
-			name = "Default"
+			name = "default"
 	  	}
 	  
 	  	resource "ibm_iam_access_group_policy" "policy" {
@@ -394,7 +394,7 @@ func testAccCheckIBMIAMAccessGroupPolicyResourceType(name string) string {
 	  	}
 	  
 	  	data "ibm_resource_group" "group" {
-			name = "Default"
+			name = "default"
 	  	}
 	  
 	  	resource "ibm_iam_access_group_policy" "policy" {

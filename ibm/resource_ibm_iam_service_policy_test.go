@@ -347,7 +347,7 @@ func testAccCheckIBMIAMServicePolicyResourceGroup(name string) string {
 	  	}
 	  
 	  	data "ibm_resource_group" "group" {
-			name = "Default"
+			name = "default"
 	  	}
 	  
 	  	resource "ibm_iam_service_policy" "policy" {
@@ -372,7 +372,7 @@ func testAccCheckIBMIAMServicePolicyResourceType(name string) string {
 	  	}
 	  
 	  	data "ibm_resource_group" "group" {
-			name = "Default"
+			name = "default"
 	  	}
 	  
 	  	resource "ibm_iam_service_policy" "policy" {
