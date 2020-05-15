@@ -193,7 +193,7 @@ func testAccCheckIBMIAMAuthorizationPolicyResourceType() string {
 	return fmt.Sprintf(`
 		  
 	resource "ibm_iam_authorization_policy" "policy" {
-		source_service_name  = "is2"
+		source_service_name  = "is"
 		source_resource_type = "image"
 		target_service_name  = "cloud-object-storage"
 		roles                = ["Reader"]
