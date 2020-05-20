@@ -6,11 +6,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/IBM/ibm-cos-sdk-go-config/resourceconfigurationv1"
 	"github.com/IBM/ibm-cos-sdk-go/aws"
 	"github.com/IBM/ibm-cos-sdk-go/aws/credentials/ibmiam"
+
 	token "github.com/IBM/ibm-cos-sdk-go/aws/credentials/ibmiam/token"
 	"github.com/IBM/ibm-cos-sdk-go/aws/session"
 	"github.com/IBM/ibm-cos-sdk-go/service/s3"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -40,6 +43,7 @@ func resourceIBMCOS() *schema.Resource {
 	return &schema.Resource{
 		Read:     resourceIBMCOSRead,
 		Create:   resourceIBMCOSCreate,
+		Update:   resourceIBMCOSUpdate,
 		Delete:   resourceIBMCOSDelete,
 		Exists:   resourceIBMCOSExists,
 		Importer: &schema.ResourceImporter{},
@@ -114,8 +118,133 @@ func resourceIBMCOS() *schema.Resource {
 				Computed:    true,
 				Description: "Private endpoint for the COS bucket",
 			},
+			"allowed_ip": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    false,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "List of IPv4 or IPv6 addresses ",
+			},
+			"activity_tracking": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"read_data_events": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "If set to true, all object read events will be sent to Activity Tracker.",
+						},
+						"write_data_events": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "If set to true, all object write events will be sent to Activity Tracker.",
+						},
+						"activity_tracker_crn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The instance of Activity Tracker that will receive object event data",
+						},
+					},
+				},
+			},
+			"metrics_monitoring": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"usage_metrics_enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Usage metrics will be sent to the monitoring service.",
+						},
+						"metrics_monitoring_crn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Instance of IBM Cloud Monitoring that will receive the bucket metrics.",
+						},
+					},
+				},
+			},
 		},
 	}
+}
+
+func resourceIBMCOSUpdate(d *schema.ResourceData, meta interface{}) error {
+	sess, err := meta.(ClientSession).CosConfigV1API()
+	if err != nil {
+		return err
+	}
+
+	hasChanged := false
+	updateBucketConfigOptions := resourceconfigurationv1.UpdateBucketConfigOptions{}
+
+	//BucketName
+	bucketName := d.Get("bucket_name").(string)
+	updateBucketConfigOptions.Bucket = &bucketName
+
+	//List of IP addresses
+	firewall := resourceconfigurationv1.Firewall{}
+	if d.HasChange("allowed_ip") {
+		ip := d.Get("allowed_ip").([]string)
+		firewall.AllowedIp = ip
+		hasChanged = true
+	}
+
+	updateBucketConfigOptions.Firewall = &firewall
+
+	//ActivityTracking
+	activityTracker := resourceconfigurationv1.ActivityTracking{}
+
+	if d.HasChange("read_data_events") {
+		readEvent := d.Get("read_data_events").(bool)
+		activityTracker.ReadDataEvents = &readEvent
+		hasChanged = true
+	}
+
+	if d.HasChange("write_data_events") {
+		writeEvent := d.Get("write_data_events").(bool)
+		activityTracker.WriteDataEvents = &writeEvent
+		hasChanged = true
+	}
+
+	if d.HasChange("activity_tracker_crn") {
+		crn := d.Get("activity_tracker_crn").(string)
+		activityTracker.ActivityTrackerCrn = &crn
+		hasChanged = true
+	}
+
+	updateBucketConfigOptions.ActivityTracking = &activityTracker
+
+	//MetricsMonitoring
+	metricsMonitor := resourceconfigurationv1.MetricsMonitoring{}
+
+	if d.HasChange("usage_metrics_enabled") {
+		metricsUsage := d.Get("usage_metrics_enabled").(bool)
+		metricsMonitor.UsageMetricsEnabled = &metricsUsage
+		hasChanged = true
+	}
+
+	if d.HasChange("metrics_monitoring_crn") {
+		metricsCrn := d.Get("metrics_monitoring_crn").(string)
+		metricsMonitor.MetricsMonitoringCrn = &metricsCrn
+		hasChanged = true
+	}
+
+	updateBucketConfigOptions.MetricsMonitoring = &metricsMonitor
+
+	if hasChanged {
+		response, err := sess.UpdateBucketConfig(&updateBucketConfigOptions)
+		if err != nil {
+			return fmt.Errorf("Error Update COS Bucket: %s\n%s", err, response)
+		}
+	}
+	return nil
 }
 
 func resourceIBMCOSRead(d *schema.ResourceData, meta interface{}) error {
@@ -280,6 +409,7 @@ func resourceIBMCOSCreate(d *schema.ResourceData, meta interface{}) error {
 	// Generating a fake id which contains every information about to get the bucket via s3 api
 	bucketID := fmt.Sprintf("%s:%s:%s:meta:%s:%s", strings.Replace(serviceID, "::", "", -1), "bucket", bucketName, apiType, bLocation)
 	d.SetId(bucketID)
+	resourceIBMCOSUpdate(d, meta)
 	return resourceIBMCOSRead(d, meta)
 }
 
